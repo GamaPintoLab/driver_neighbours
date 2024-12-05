@@ -1,5 +1,5 @@
 #perform paired comparison tests
-
+nclust=9
 driver_neib_pairs <- read.csv("driver_neib_pairs.csv")
 load("mutationtab1.RData")
 load("exptab1_0.RData")
@@ -10,20 +10,17 @@ ctdtab1=mkctdtab(cancertype1,mutationtab1)
 
 
 library(doParallel)
-library(progressr)
 library(doSNOW)
 handlers(global = TRUE)
 
 
-cl <- makeCluster(9)
-registerDoSNOW(cl) #registerDoParallel(cl)
-pb = txtProgressBar(min = 0, max = 362563, initial = 0) 
-dfrespair=foreach(i=1:362563, .combine=rbind) %dopar% {
+cl <- makeCluster(nclust)
+registerDoSNOW(cl)
+dfrespair=foreach(i=1:nrow(driver_neib_pairs), .combine=rbind) %dopar% {
   s=mkpairedtest(driver_neib_pairs$driver[i],driver_neib_pairs$neighbour[i],mutationtab1,exptab1_0,cancertype1,ctdtab1,minmut=1)
   setTxtProgressBar(pb,i)
   return(s)
 }
-close(pb)
 stopCluster(cl) 
 
 

@@ -2,12 +2,13 @@
 library(survival)
 library(survminer)
 
-unict=unique(clintab2$cancer.type.abbreviation)
+
 load("clintab2.RData")
 load("exptab2.RData")
 load("neibrho.RData")
 source("driver_neighbour_functions.R")
 
+unict=unique(clintab2$cancer.type.abbreviation)
 
 neibsurv=list()
 neibsurv$coef=matrix(0,nrow=nrow(neibrho),ncol=length(unict))

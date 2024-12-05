@@ -7,7 +7,7 @@ cancerdrivers <- read.delim("NCG_cancerdrivers_annotation_supporting_evidence.ts
 mutationtab=read.delim("mc3.v0.2.8.PUBLIC.nonsilentGene.xena",header=T,stringsAsFactors = F)
 mutationtab$sample[7224]="XXX" #identify duplicate gene to eliminate
 
-exptab=read.delim("RNASeqV2.geneExp.xena",header=T,stringsAsFactors = F)
+exptab=read.delim("EB++AdjustPANCAN_IlluminaHiSeq_RNASeqV2.geneExp.xena",header=T,stringsAsFactors = F)
 
 which(duplicated(exptab$sample))
 exptab$sample[16303]
@@ -21,11 +21,11 @@ for (i in 1:20530){ #substitute NaN values by minimum observed for the respectiv
 save(exptab,file="exptab.RData")
 load("exptab.RData")
 
-clintab=read.delim("Survival_table",header=T,stringsAsFactors = F)
+clintab=read.delim("Survival_SupplementalTable_S1_20171025_xena_sp",header=T,stringsAsFactors = F)
 clintabsamples=gsub("-",".",clintab$sample,fixed=T) #to make patient identifiers uniform across data frames
 clintab$sample=clintabsamples
 
-phenotab=read.delim("TCGA_phenotype.tsv",header=T,stringsAsFactors = F)
+phenotab=read.delim("TCGA_phenotype_denseDataOnlyDownload.tsv",header=T,stringsAsFactors = F)
 phenosamples=gsub("-",".",phenotab$sample,fixed=T) #to make patient identifiers uniform across data frames
 phenotab$sample=phenosamples
 

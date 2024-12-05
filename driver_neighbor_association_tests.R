@@ -1,5 +1,7 @@
 #perform association tests
 
+nclust=7
+
 driver_neib_pairs <- read.csv("driver_neib_pairs.csv")
 load("mutationtab3.RData")
 load("exptab3.RData")
@@ -19,13 +21,13 @@ unidrivers=unique(driver_neib_pairs$driver)
 
 
 library(doParallel)
-library(progressr)
+
 library(doSNOW)
 handlers(global = TRUE)
 
 
-cl <- makeCluster(7)
-registerDoSNOW(cl) #registerDoParallel(cl)
+cl <- makeCluster(nclust)
+registerDoSNOW(cl)
 unidrivers=unique(driver_neib_pairs$driver)
 dfreslmd3=foreach(i=1:length(unidrivers), .combine=rbind) %dopar% {
   s=mktestslmd(unidrivers[i],driver_neib_pairs$neighbour[driver_neib_pairs$driver==unidrivers[i]],mutationtab3,exptab3,cancertype3,ctdtab3,ctetab3,minmut=1)  
@@ -48,8 +50,8 @@ for (k in 1:101){
   rdata3=mkrandexp(exptab3,cancertype3)
   
   tic()
-  cl <- makeCluster(7)
-  registerDoSNOW(cl) #registerDoParallel(cl)
+  cl <- makeCluster(nclust)
+  registerDoSNOW(cl)
   unidrivers=unique(driver_neib_pairs$driver)
   dfreslmd3_r=foreach(i=1:length(unidrivers), .combine=rbind) %dopar% {
     s=mktestslmd(unidrivers[i],driver_neib_pairs$neighbour[driver_neib_pairs$driver==unidrivers[i]],mutationtab3,rdata3$rexptab,cancertype3,ctdtab3,rdata3$rctetab,minmut=1)  
