@@ -2,7 +2,7 @@
 Code for the analysis of neighbours of cancer drivers<br>
 
 Data files necessary to run the analysis are available at: <br>
-https://zenodo.org/records/14284408 <br>
+https://zenodo.org/records/14674267 <br>
 
 
 Step 1 - prepare data frames for analysis:<br>
@@ -51,6 +51,12 @@ Necessary data files: <br>
 1. neibsurv.RData; 
 2. neibrho.RData; 
 3. neibcoef.RData<br>
+
+Stpe 7 - search neighbours in Open Targetd:<br>
+Run opentargets.ipynb<br>
+Necessary data files: <br>
+1. unzip OpenTargets.zip (the resulting OpenTargets folder should be in the same location as opentargets.ipynb); 
+<br>
 
 driver_neighbour_functions.R contains accessory functions used in the remaining R scripts.<br>
 
