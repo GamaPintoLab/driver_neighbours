@@ -64,6 +64,20 @@ neibcoef$survposfrac=neibcoef$psurv/(neibcoef$psurv+neibcoef$nsurv)
 
 
 #Figure 4
+library(ggplot2)
+
+neib1=neibrho
+neib1$type="BCT"
+neib2=neibcoef
+neib2$type="WCT"
+neib12=rbind(neib1,neib2)
+
+fig4A=ggplot(neib12,aes(x=as.factor(psurv+nsurv),y=z,fill=type))+
+  geom_boxplot(coef=10)+
+  xlab("# SA")+
+  ylab("DA z-score")+
+  labs(fill="")
+
 
 library(boot)
 # Function to compute Spearman's correlation
@@ -103,7 +117,7 @@ for (i in 1:nrow(spdf)){
   spdf$ciS[i]=conf_interval$percent[5]
 }
 
-fig4A=ggplot(spdf,aes(x=interaction(type,sign),y=rho,fill=enriched))+
+fig4B=ggplot(spdf,aes(x=interaction(type,sign),y=rho,fill=enriched))+
   geom_bar(stat = "identity", position = position_dodge())+
   geom_errorbar(aes(ymax = ciS, ymin = ciI),position = position_dodge(width = 0.9), width = 0.2)+
   ylab(expression(rho~"(#DA,#SA)"))+
@@ -146,7 +160,7 @@ fisher.test(h)
 propsigdf=data.frame(type=typevec,drivsig=drivvec,prop=propvec,ciI=ciIvec,ciS=ciSvec)
 
 
-fig4B=ggplot(propsigdf,aes(x=type,y=prop,fill=drivsig))+
+ggplot(propsigdf,aes(x=type,y=prop,fill=drivsig))+
   geom_bar(stat = "identity", position = position_dodge())+
   geom_errorbar(aes(ymax = ciS, ymin = ciI),position = position_dodge(width = 0.9), width = 0.2)+
   xlab("Driver association type")+
@@ -238,6 +252,7 @@ fig4D=ggplot(propsignnegdf,aes(x=type,y=prop,fill=drivsig))+
   ylab("Proportion enriched in SA-")+
   labs(fill="DA-")
 
+library(ggpubr)
 fig4=ggarrange(fig4A, fig4B, fig4C, fig4D, 
                labels = c("A", "B", "C","D"),
                ncol = 2, nrow = 2)
