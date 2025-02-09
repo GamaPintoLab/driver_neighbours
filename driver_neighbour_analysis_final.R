@@ -273,6 +273,8 @@ intersect(neibrhoNsel$Group.1,neibcoefNsel$Group.1)
 intersect(neibrhoPsel$Group.1,neibcoefNsel$Group.1)
 intersect(neibrhoNsel$Group.1,neibcoefPsel$Group.1)
 
+cancerdrivers <- read.delim("NCG_cancerdrivers_annotation_supporting_evidence.tsv")
+
 canonical=unique(cancerdrivers$symbol[cancerdrivers$type=="Canonical Cancer Driver"])
 oncogenes=unique(cancerdrivers$symbol[cancerdrivers$NCG_oncogene==1])
 tsg=unique(cancerdrivers$symbol[cancerdrivers$NCG_tsg==1])

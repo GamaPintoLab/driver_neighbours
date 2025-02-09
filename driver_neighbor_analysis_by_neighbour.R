@@ -10,6 +10,7 @@ load("mutationtab3.RData")
 load("exptab3.RData")
 source("driver_neighbour_functions.R")
 
+library(ggplot2)
 
 dfreslmd3p=dfreslmd3[dfrespair2$paircoef_p>0.05,] #dataframe with all interactions but excluding interactions where the paired data associations were significative 
 

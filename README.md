@@ -4,6 +4,15 @@ Code for the analysis of neighbours of cancer drivers<br>
 Data files necessary to run the analysis are available at: <br>
 https://zenodo.org/records/14674267 <br>
 
+R packages needed: <br>
+1. doParallel
+2. doSnow
+3. ggplot2
+4. ggpubr
+5. survival
+6. survminer
+boot<br>
+
 
 Step 1 - prepare data frames for analysis:<br>
 Run driver_neighbours_prep.R<br>
@@ -50,7 +59,8 @@ Run driver_neighbour_analysis_final.R<br>
 Necessary data files: <br>
 1. neibsurv.RData; 
 2. neibrho.RData; 
-3. neibcoef.RData<br>
+3. neibcoef.RData;
+4. NCG_cancerdrivers_annotation_supporting_evidence.tsv<br>
 
 Stpe 7 - search neighbours in Open Targetd:<br>
 Run opentargets.ipynb<br>
