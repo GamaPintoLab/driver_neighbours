@@ -4,14 +4,14 @@ Code for the analysis of neighbours of cancer drivers<br>
 Data files necessary to run the analysis are available at: <br>
 https://zenodo.org/records/14674267 <br>
 
-R packages needed: <br>
+R packages needed:
 1. doParallel
 2. doSnow
 3. ggplot2
 4. ggpubr
 5. survival
 6. survminer
-boot<br>
+7. boot<br>
 
 
 Step 1 - prepare data frames for analysis:<br>
