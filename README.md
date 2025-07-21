@@ -10,7 +10,8 @@ R packages needed:
 3. ggplot2
 4. ggpubr
 5. arrow
-6. tictioc<br>
+6. tictioc
+7. Coselens<br>
 
 
 To reproduce the figures in the manuscript:<br>
