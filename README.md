@@ -1,7 +1,7 @@
 # driver_neighbours
 Code for the analysis of neighbours of cancer drivers<br>
 
-Data files necessary to run the analysis are available at: <br>
+Raw data files used in this analysis are available at: <br>
 https://zenodo.org/records/14674267 <br>
 
 R packages needed:
@@ -9,64 +9,27 @@ R packages needed:
 2. doSnow
 3. ggplot2
 4. ggpubr
-5. survival
-6. survminer
-7. boot<br>
+5. arrow
+6. tictioc<br>
 
 
-Step 1 - prepare data frames for analysis:<br>
-Run driver_neighbours_prep.R<br>
+To reproduce the figures in the manuscript:<br>
+Run bct_wct_figures.R<br>
 
-Step 2 - find interactions where neighbour expression is influenced by driver mutation (through analysis of paired tumour-normal samples):<br>
-Run driver_neighbours_paired.R<br>
-Necessary data files: <br>
-1. driver_neib_pairs.csv; 
-2. mutationtab1.RData;
-3. exptab1_0.RData; 
-4. cancertype1.RData<br>
+To run the tumour-normal paired sample analysis and compare it with the signalling pathway analysis:<br>
+Run paired_analysis.R<br>
 Note: code is parallelized. Change nclust accordingly to the number of available cores.<br>
 
-Step 3 - compute neighbour driver statistical associations:<br>
-Run driver_neighbour_associations_tests.R<br>
-Necessary data files: <br>
-1. driver_neib_pairs.csv; 
-2. mutationtab3.RData; 
-3. exptab3.RData; 
-4. cancertype3.RData; 
-5. dfrespair2.RData <br>
+To run wct analysis (including analysis of shuffled datasets:<br>
+Run wct_computation.R<br>
 Note: code is parallelized. Change nclust accordingly to the number of available cores. Tests with permuted data take long time to run.<br>
 
-Step 4 - analyse associations by neighbour:<br>
-Run driver_neighbour_analysis_by_neighbour.R<br>
-Necessary data files: <br>
-1. dfrespair2.RData; 
-2. dfreslmd3.RData; 
-3. ctdtab3.RData; 
-4. ctetab3.RData; 
-5. cancertype3.RData; 
-6. mutationtab3.RData; 
-7. exptab3.RData<br>
+To analyse bct and wct results by neighbour and by driver:<br>
+Run bct_wct_analysis.R<br>
 
-Step 5 - compute Cox regression analysis for all neighbours and cancer types:<br>
-Run driver_neighbour_survival.R<br>
-Necessary data files: <br>
-1. clintab2.RData; 
-2. exptab2.RData; 
-3. neibrho.RData<br>
+To run the validation of wct interactions using Coselens:<br>
+Run coselens_validation.R<br>
 
-Step 6 - combine and correlate driver and survival associations:<br>
-Run driver_neighbour_analysis_final.R<br>
-Necessary data files: <br>
-1. neibsurv.RData; 
-2. neibrho.RData; 
-3. neibcoef.RData;
-4. NCG_cancerdrivers_annotation_supporting_evidence.tsv<br>
 
-Stpe 7 - search neighbours in Open Targetd:<br>
-Run opentargets.ipynb<br>
-Necessary data files: <br>
-1. unzip OpenTargets.zip (the resulting OpenTargets folder should be in the same location as opentargets.ipynb); 
-<br>
-
-driver_neighbour_functions.R contains accessory functions used in the remaining R scripts.<br>
+bct_wct_functions.R contains accessory functions used in the remaining R scripts.<br>
 
