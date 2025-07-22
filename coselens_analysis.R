@@ -1,9 +1,9 @@
-mutdata=read.delim("./data/mc3.v0.2.8.PUBLIC.xena",header=T,stringsAsFactors = F)
+mutdata=read.delim("./data/raw/mc3.v0.2.8.PUBLIC.xena",header=T,stringsAsFactors = F)
 
 library(arrow)
-expdf=read_feather(file="./data/expression.feather")
-maingraph=read.csv("./data/main_graph.csv",header=T,stringsAsFactors = F)
-mtb=read.csv("./data/mutation_burden.csv",header=T,stringsAsFactors = F)
+expdf=read_feather(file="./data/processed/expression.feather")
+maingraph=read.csv("./data/processed/main_graph.csv",header=T,stringsAsFactors = F)
+mtb=read.csv("./data/processed/mutation_burden.csv",header=T,stringsAsFactors = F)
 
 library(coselens)
 
@@ -32,45 +32,21 @@ coselens_prep=function(dname,nname,ctype,ctt,mutall,expmat){
 #1
 cos_cic_hdac1_lgg=coselens_prep("CIC","HDAC1","LGG",mtb,mutdata,expdf)
 #2
-cos_tp53_abcf1_brca=coselens_prep("TP53","ABCF1","BRCA",mtb,mutdata,expdf)
-
-cos_tp53_abcf1_ucec=coselens_prep("TP53","ABCF1","UCEC",mtb,mutdata,expdf)
-
-cos_cic_lsm14a_lusc=coselens_prep("CIC","LSM14A","LUSC",mtb,mutdata,expdf)
-
-cos_cic_lsm14a_lgg=coselens_prep("CIC","LSM14A","LGG",mtb,mutdata,expdf)
-
 cos_cic_lsm14a_brca=coselens_prep("CIC","LSM14A","BRCA",mtb,mutdata,expdf)
-
-cos_cic_lsm14a_coad=coselens_prep("CIC","LSM14A","COAD",mtb,mutdata,expdf)
 #3
-cos_fubp1_trim67_coad=coselens_prep("FUBP1","TRIM67","COAD",mtb,mutdata,expdf)
-
 cos_fubp1_trim67_lgg=coselens_prep("FUBP1","TRIM67","LGG",mtb,mutdata,expdf)
 #4
 cos_gtf2i_mab21l2_thym=coselens_prep("GTF2I","MAB21L2","THYM",mtb,mutdata,expdf)
-
-cos_gtf2i_mab21l2_ucec=coselens_prep("GTF2I","MAB21L2","UCEC",mtb,mutdata,expdf)
 #5
 cos_nfe2l2_ugt1a6_cesc=coselens_prep("NFE2L2","UGT1A6","CESC",mtb,mutdata,expdf)
 #6
-cos_idh1_serpinh1_prad=coselens_prep("IDH1","SERPINH1","PRAD",mtb,mutdata,expdf)
-
 cos_idh1_serpinh1_lgg=coselens_prep("IDH1","SERPINH1","LGG",mtb,mutdata,expdf)
 #7
 cos_egfr_sec61g_gbm=coselens_prep("EGFR","SEC61G","GBM",mtb,mutdata,expdf)
 #8
-cos_stk11_sik1_hnsc=coselens_prep("STK11","SIK1","HNSC",mtb,mutdata,expdf)
-
 cos_stk11_sik1_luad=coselens_prep("STK11","SIK1","LUAD",mtb,mutdata,expdf)
-
-cos_stk11_sik1_paad=coselens_prep("STK11","SIK1","PAAD",mtb,mutdata,expdf)
-
-cos_stk11_sik1_lusc=coselens_prep("STK11","SIK1","LUSC",mtb,mutdata,expdf)
 #9
 cos_ctnnb1_ezr_blca=coselens_prep("CTNNB1","EZR","BLCA",mtb,mutdata,expdf)
-
-cos_ctnnb1_ezr_luad=coselens_prep("CTNNB1","EZR","LUAD",mtb,mutdata,expdf)
 #10
 cos_atrx_cct8l2_lgg=coselens_prep("ATRX","CCT8L2","LGG",mtb,mutdata,expdf)
 
@@ -84,4 +60,4 @@ cos_10=rbind(cos_10,cos_egfr_sec61g_gbm)
 cos_10=rbind(cos_10,cos_stk11_sik1_luad)
 cos_10=rbind(cos_10,cos_ctnnb1_ezr_blca)
 cos_10=rbind(cos_10,cos_atrx_cct8l2_lgg)
-write.csv(cos_10,file="cos10.csv",row.names = F)
+write.csv(cos_10,file="./data/processed/cos10.csv",row.names = F)

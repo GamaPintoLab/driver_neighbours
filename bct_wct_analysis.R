@@ -3,14 +3,14 @@ library("arrow")
 source("bct_wct_functions")
 #read wct results
 
-wct_obs=read_feather("./data/wct_obs.feather")
+wct_obs=read_feather("./data/processed/wct_obs.feather")
 
 #read shuffled p values
 
 wctrpmat=matrix(data=1,nrow=nrow(wct_o),ncol=100)
 wctrcmat=matrix(data=1,nrow=nrow(wct_o),ncol=100)
 for (i in 1:100){
-  load(paste0("./data/shuffled_wct/wct_r",i,".RData"))
+  load(paste0("./data/processed/shuffled_wct/wct_r",i,".RData"))
   wctrpmat[,i]=wct_r$coef_p
   wctrcmat[,i]=wct_r$coef
 }
@@ -19,7 +19,7 @@ wctrsignmat=1*(wctrcmat>0)
 wctrsigmat[is.na(wctrsigmat)]=0
 wctrsignmat[is.na(wctrsignmat)]=0
 
-write_feather(as.data.frame(wctrpmat),"./data/wctrpmat.feather")
+write_feather(as.data.frame(wctrpmat),"./data/processed/wctrpmat.feather")
 
 wctbyneib=xct_by_dn(wct_obs,wctrsigmat,wctrsignmat,"n","coef",0.1)
 
@@ -28,13 +28,13 @@ wctbydriv=xct_by_dn(wct_obs,wctrsigmat,wctrsignmat,"d","coef",0.1)
 
 # read bct results
 
-bct_obs=read_feather("./data/bct_obs.feather")
+bct_obs=read_feather("./data/processed/bct_obs.feather")
 
 bct_obs$pairid=paste(bct_obs$driver,bct_obs$neighbour,sep="_")
 
 # filter out interactions were driver may regulate neighbour expression ou that have less than 10
 # cancer types 
-pairs_to_exclude_bct=read.csv("./data/pairs_to_exclude_bct.csv",header=T,stringsAsFactors = F)
+pairs_to_exclude_bct=read.csv("./data/processed/pairs_to_exclude_bct.csv",header=T,stringsAsFactors = F)
 
 pairs_to_exclude_bct$pairid=paste(pairs_to_exclude_bct$driver,pairs_to_exclude_bct$neighbour,sep="_")
 
@@ -48,7 +48,7 @@ bct_o_match$pairid=paste(bct_o_match$driver,bct_o_match$neighbour,sep="_")
 bct_o_match$order=(1:nrow(bct_o_match))
 
 for (i in 1:100){
-  filename=paste0("./data/shuffled_bct/shuffle",i,".feather")
+  filename=paste0("./data/processed/shuffled_bct/shuffle",i,".feather")
   bct_r=read_feather(filename)
   bct_r$pairid=paste(bct_r$driver,bct_r$neighbour,sep="_")
   bct_r_all=merge(bct_o_match,bct_r,by="pairid",all.x=T)
@@ -58,7 +58,7 @@ for (i in 1:100){
   bctrcmat[,i]=bct_r_all$rho
 }
 
-write_feather(as.data.frame(bctrpmat),"./data/bctrpmat.feather")
+write_feather(as.data.frame(bctrpmat),"./data/processed/bctrpmat.feather")
 
 bctrsigmat=1*(bctrpmat<=0.05)
 bctrsigmat[is.na(bctrsigmat)]=0
@@ -70,10 +70,10 @@ bctbyneib=xct_by_dn(bct_obs,bctrsigmat,bctrsignmat,"n","rho",0.1)
 
 bctbydriv=xct_by_dn(bct_obs,bctrsigmat,bctrsignmat,"d","rho",0.1)
 
-save(wctbyneib,file="./data/wctbyneib.RData")
-save(wctbydriv,file="./data/wctbydriv.RData")
-save(bctbyneib,file="./data/bctbyneib.RData")
-save(bctbydriv,file="./data/bctbydriv.RData")
+save(wctbyneib,file="./data/processed/wctbyneib.RData")
+save(wctbydriv,file="./data/processed/wctbydriv.RData")
+save(bctbyneib,file="./data/processed/bctbyneib.RData")
+save(bctbydriv,file="./data/processed/bctbydriv.RData")
 
 #non random distribution of significant associations
 
@@ -121,7 +121,7 @@ obsdf$int[4]=rdistbct$meandn
 
 # include survival associations from human protein atlas
 
-hpa_surv=read.delim("./data/cancer_prognostic_data.tsv",header=T,stringsAsFactors = F)
+hpa_surv=read.delim("./data/raw/cancer_prognostic_data.tsv",header=T,stringsAsFactors = F)
 hpa_surv_tcga=hpa_surv[grep("(TCGA)",hpa_surv$Cancer,fixed=T),]
 
 survgenes=sort(unique(hpa_surv_tcga$Gene.name))
@@ -220,7 +220,7 @@ bctneibtabs$SAsign[bctneibtabs$posstrict==0 & bctneibtabs$negstrict>0]="negative
 
 #driver analysis
 
-cancerdrivers <- read.delim("./data/NCG_cancerdrivers_annotation_supporting_evidence.tsv",stringsAsFactors = F)
+cancerdrivers <- read.delim("./data/raw/NCG_cancerdrivers_annotation_supporting_evidence.tsv",stringsAsFactors = F)
 
 canonical=unique(cancerdrivers$symbol[cancerdrivers$type=="Canonical Cancer Driver"])
 oncogenes=unique(cancerdrivers$symbol[cancerdrivers$NCG_oncogene==1])
@@ -260,8 +260,8 @@ wctdrivertab$type="WCT"
 bctdrivertab$type="BCT"
 
 
-save(wctdrivertab,file="./data/wctdrivertab.RData")
-save(bctdrivertab,file="./data/bctdrivertab.RData")
+save(wctdrivertab,file="./data/processed/wctdrivertab.RData")
+save(bctdrivertab,file="./data/processed/bctdrivertab.RData")
 
 
 
@@ -300,8 +300,8 @@ wctPcand=wctneibtabs[wctneibtabs$enriched==1 & wctneibtabs$DAsign=="positive" & 
 wctNcand=wctneibtabs[wctneibtabs$enriched==1 & wctneibtabs$DAsign=="negative" & wctneibtabs$SAsign=="negative",]
 
 
-write.csv(wctneibtabs,file="./data/wctneibtabs.csv",row.names=F)
-write.csv(bctneibtabs,file="./data/bctneibtabs.csv",row.names=F)
+write.csv(wctneibtabs,file="./data/processed/wctneibtabs.csv",row.names=F)
+write.csv(bctneibtabs,file="./data/processed/bctneibtabs.csv",row.names=F)
 
-write.csv(wctdrivertab,file="./data/wctdrivertab.csv",row.names=F)
-write.csv(bctdrivertab,file="./data/bctdrivertab.csv",row.names=F)
+write.csv(wctdrivertab,file="./data/processed/wctdrivertab.csv",row.names=F)
+write.csv(bctdrivertab,file="./data/processed/bctdrivertab.csv",row.names=F)

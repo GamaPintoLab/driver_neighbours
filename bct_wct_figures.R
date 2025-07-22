@@ -6,10 +6,10 @@ source("bct_wct_functions.R")
 
 
 #figure 2
-mutdf=read_feather(file="./data/mutation.feather")
-expdf=read_feather(file="./data/expression.feather")
-maingraph=read.csv("./data/main_graph.csv",header=T,stringsAsFactors = F)
-mtb=read.csv("./data/mutation_burden.csv",header=T,stringsAsFactors = F)
+mutdf=read_feather(file="./data/processed/mutation.feather")
+expdf=read_feather(file="./data/processed/expression.feather")
+maingraph=read.csv("./data/processed/main_graph.csv",header=T,stringsAsFactors = F)
+mtb=read.csv("./data/processed/mutation_burden.csv",header=T,stringsAsFactors = F)
 
 ctdtab=mkctdtab(mtb,mutdf[,1:3081])
 ctmtbtab=mkctmtbtab(mtb)
@@ -81,15 +81,15 @@ ggarrange(fig2A, fig2B, fig2C, fig2D,
 #Figure 3
 # figures with distribution of fraction of positives
 
-bctneibtabs=read.csv("./data/bctneibtabs.csv",header=T,stringsAsFactors = F)
-wctneibtabs=read.csv("./data/wctneibtabs.csv",header=T,stringsAsFactors = F)
+bctneibtabs=read.csv("./data/processed/bctneibtabs.csv",header=T,stringsAsFactors = F)
+wctneibtabs=read.csv("./data/processed/wctneibtabs.csv",header=T,stringsAsFactors = F)
 
-bctdrivertab=read.csv("./data/bctdrivertab.csv",header=T,stringsAsFactors = F)
-wctdrivertab=read.csv("./data/wctdrivertab.csv",header=T,stringsAsFactors = F)
+bctdrivertab=read.csv("./data/processed/bctdrivertab.csv",header=T,stringsAsFactors = F)
+wctdrivertab=read.csv("./data/processed/wctdrivertab.csv",header=T,stringsAsFactors = F)
 
-load("./data/bctbyneib.RData")
-load("./data/wctbyneib.RData")
-load("./data/bctbydriv.RData")
+load("./data/processed/bctbyneib.RData")
+load("./data/processed/wctbyneib.RData")
+load("./data/processed/bctbydriv.RData")
 load("./data/wctbydriv.RData")
 
 posfracdf1=data.frame(type="observed",posfrac=bctneibtabs$posfrac[bctneibtabs$enriched==1])
@@ -272,7 +272,7 @@ ggarrange(fig4A, fig4B, fig4C, fig4D,
 
 #tau of bct enriched neighbours
 
-tauhpa=read_feather("./data/consensus_grouped.feather")
+tauhpa=read_feather("./data/processed/consensus_grouped.feather")
 tauhpa=tauhpa[,1:2]
 tauhpa=tauhpa[!duplicated(tauhpa),]
 names(tauhpa)=c("gene","tau")

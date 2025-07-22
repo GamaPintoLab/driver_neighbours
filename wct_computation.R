@@ -6,12 +6,12 @@ library(doSNOW)
 nclust=7 #adjust according to computer processor
 
 #load data
-mutdf=read_feather(file="./data/mutation.feather")
-expdf=read_feather(file="./data/expression.feather")
-maingraph=read.csv("./data/main_graph.csv",header=T,stringsAsFactors = F)
-mtb=read.csv(".data/mutation_burden.csv",header=T,stringsAsFactors = F)
+mutdf=read_feather(file="./data/processed/mutation.feather")
+expdf=read_feather(file="./data/processed/expression.feather")
+maingraph=read.csv("./data/processed/main_graph.csv",header=T,stringsAsFactors = F)
+mtb=read.csv(".data/processed/mutation_burden.csv",header=T,stringsAsFactors = F)
 
-pairs_to_exclude_wct=read.csv("./data/pairs_to_exclude_wct.csv", header=T, stringsAsFactors = F)
+pairs_to_exclude_wct=read.csv("./data/processed/pairs_to_exclude_wct.csv", header=T, stringsAsFactors = F)
 
 pairid=paste(maingraph$driver,maingraph$neighbour,sep="_")
 maingraph$pairid=pairid
@@ -33,7 +33,7 @@ wct_obs=foreach(i=1:length(unidrivers), .combine=rbind) %dopar% {
 stopCluster(cl) 
 toc()
 
-write_feather(wct_obs,"wct_obs.feather")
+write_feather(wct_obs,"./data/processed/wct_obs.feather")
 
 #shuffle
 
@@ -52,7 +52,7 @@ for (k in 1:100){
   stopCluster(cl) 
   toc()
   
-  save(wct_r,file=paste0("./data/shuffled_wct/wct_r",k,".RData"))
+  save(wct_r,file=paste0("./data/processed/shuffled_wct/wct_r",k,".RData"))
   
 }
 

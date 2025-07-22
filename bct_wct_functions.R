@@ -102,19 +102,15 @@ mkwcttests=function(dname,nnames,mutt,expt,ctt,ctdtab,minmut){ #function to test
   outt=cbind(outt,(neibexp))
   a=ctdtab[,c(1,2)]
   a$mutfreq=ctdtab[,dname]
-  #a=cbind(a,ctetab[,nnames])
   a$mutrfreq=a$mutfreq/a$Freq
   b=a[a$mutfreq>=minmut,]
   output=data.frame(coef=rep(0,length(nnames)),coef_p=1)
   if (nrow(b)>2){ #at least 3 cancer types with mutated individuals
     d=data.frame(outt[is.element(outt$cancer_type,b$cancer_type),])
     for (i in 1:length(nnames)){
-      #c=cor.test(b[,i+3],b$mutrfreq,method="spearman",exact=F)
       d$exp=d[,i+4]
       fitglm=lm(as.numeric(exp)~mutated+cancer_type+log10(mutation_burden+1),data=d)
       sumtab=summary(fitglm)
-      #fitlog=glm(mutated~as.numeric(exp)+cancer_type,family=binomial,data=d)
-      #logtab=summary(fitlog)
       output[i,]=c(sumtab$coefficients["mutated",1],sumtab$coefficients["mutated",4])
     }
   } 
@@ -127,11 +123,8 @@ mkwcttests=function(dname,nnames,mutt,expt,ctt,ctdtab,minmut){ #function to test
 
 ###################
 mkrandexpwct=function(exptab){ #auxiliary function to generate random permutation of expression table
-  #rexptab=exptab[sample(nrow(exptab),nrow(exptab),replace=F),sample(ncol(exptab),ncol(exptab),replace=F)]
   rexptab=exptab[sample(nrow(exptab),nrow(exptab),replace=F),]
   names(rexptab)=names(exptab)
-  #row.names(rexptab)=row.names(exptab)
-  #rctetab=mkctetab(cct,rexptab)
   rexptab
 }
 
@@ -291,9 +284,6 @@ logicOR=function(logicA,logicB){
   d=sum((!logicA)*(!logicB))
   abcd=matrix(data=c(a,b,c,d),nrow=2,ncol=2,byrow=T)
   h=fisher.test(abcd)
-  #OR=log(a*d/(c*b))
-  #SE=sqrt((1/a)+(1/b)+(1/c)+(1/d))
-  #pval=phyper(a-1,a+b,c+d,a+c,lower.tail=F)
   output=c(h$estimate, h$conf.int[1], h$conf.int[2], h$p.value)
 }
 

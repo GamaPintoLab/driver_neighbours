@@ -6,11 +6,11 @@ nclust=7 #adjust to computer processor
 
 #paired analysis
 
-mutpairdf=read_feather(file="./data/mutation_paired.feather")
-exppairdf=read_feather(file="./data/expression_paired.feather")
+mutpairdf=read_feather(file="./data/processed/mutation_paired.feather")
+exppairdf=read_feather(file="./data/processed/expression_paired.feather")
 ctpair=mutpairdf[,1328:1329]
 
-mgpaired=read.csv("./data/main_graph_paired.csv",header=T, stringsAsFactors = F)
+mgpaired=read.csv("./data/processed/main_graph_paired.csv",header=T, stringsAsFactors = F)
 
 ctdtab1=mkctdtab(ctpair,mutpairdf[,1:1327])
 
@@ -31,7 +31,7 @@ pairedlm$paircoef_p[is.na(pairedlm$paircoef_p)]=1
 
 #compare paired with pathway analysis
 
-fullpathanalysis=read.csv("./data/full_pathway_analysis.csv",header=T,stringsAsFactors = F)
+fullpathanalysis=read.csv("./data/processed/full_pathway_analysis.csv",header=T,stringsAsFactors = F)
 
 pairid=paste(fullpathanalysis$driver,fullpathanalysis$neighbour,sep="_")
 fullpathanalysis$pairid=pairid
@@ -58,13 +58,13 @@ for (i in 1:8){
 
 sigdf=data.frame(SPL=rownames(dist_sig),NonSig=dist_sig[,1],Sig=dist_sig[,2],Freq=sigfrac,pval=psigfrac)
 
-write.csv(sigdf,file="./data/sigdf.csv",row.names=F)
+write.csv(sigdf,file="./data/processed/sigdf.csv",row.names=F)
 
 pairs_to_exclude1=pairedlm[pairedlm$paircoef_p<=0.05,1:2]
 
 pairs_to_exclude2=fullpathanalysis[which(fullpathanalysis$distance<=2),1:2]
 
-pairstat=read_feather("./data/pairstat.feather")
+pairstat=read_feather("./data/processed/pairstat.feather")
 
 pairs_to_exclude3=pairstat[pairstat$nct<10,1:2]
 
@@ -74,9 +74,6 @@ pairs_to_exclude_wct=pairs_to_exclude_wct[!duplicated(pairs_to_exclude_wct),]
 pairs_to_exclude_bct=rbind(pairs_to_exclude_wct,pairs_to_exclude3)
 pairs_to_exclude_bct=pairs_to_exclude_bct[!duplicated(pairs_to_exclude_bct),]
 
-write.csv(pairs_to_exclude_wct,file="./data/pairs_to_exclude_wct.csv",row.names = F)
-write.csv(pairs_to_exclude_bct,file="./data/pairs_to_exclude_bct.csv",row.names = F)
-
-
-
+write.csv(pairs_to_exclude_wct,file="./data/processed/pairs_to_exclude_wct.csv",row.names = F)
+write.csv(pairs_to_exclude_bct,file="./data/processed/pairs_to_exclude_bct.csv",row.names = F)
 
