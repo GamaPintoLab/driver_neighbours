@@ -123,6 +123,13 @@ obsdf$int[4]=rdistbct$meandn
 
 hpa_surv=read.delim("./data/raw/cancer_prognostic_data.tsv",header=T,stringsAsFactors = F)
 hpa_surv_tcga=hpa_surv[grep("(TCGA)",hpa_surv$Cancer,fixed=T),]
+hpa_surv_tcga$pval=0
+hpa_surv_tcga$pval=apply(hpa_surv_tcga[,4:9],1,min,na.rm=T)
+hpa_surv_tcga=hpa_surv_tcga[hpa_surv_tcga$pval!=Inf,]
+hpa_surv_tcga$padj=p.adjust(hpa_surv_tcga$pval,method="BH")
+
+hpa_surv_sig=hpa_surv_tcga[hpa_surv_tcga$pval<=0.001,]
+max(hpa_surv_sig$padj)
 
 survgenes=sort(unique(hpa_surv_tcga$Gene.name))
 
@@ -219,8 +226,14 @@ bctneibtabs$SAsign[bctneibtabs$posstrict==0 & bctneibtabs$negstrict>0]="negative
 
 
 #driver analysis
-
+cosmicdrivers=read.delim("./data/raw/Cosmic_Genes_v102_GRCh38.tsv",stringsAsFactors = F)
+cosmicdrivers=cosmicdrivers[cosmicdrivers$IN_CANCER_CENSUS=="y",]
+intogendrivers=read.delim("./data/raw/Compendium_Cancer_Genes.tsv",stringsAsFactors = F)
+intogenunidrivers=unique(intogendrivers$SYMBOL)
+oncokb=read.delim("./data/raw/cancerGeneList.tsv",stringsAsFactors = F)
 cancerdrivers <- read.delim("./data/raw/NCG_cancerdrivers_annotation_supporting_evidence.tsv",stringsAsFactors = F)
+
+
 
 canonical=unique(cancerdrivers$symbol[cancerdrivers$type=="Canonical Cancer Driver"])
 oncogenes=unique(cancerdrivers$symbol[cancerdrivers$NCG_oncogene==1])
@@ -280,6 +293,16 @@ bctneibtabs$oncogene[is.element(bctneibtabs$gene,oncogenes)]=1
 bctneibtabs$tsgene=0
 bctneibtabs$tsgene[is.element(bctneibtabs$gene,tsgenes)]=1
 
+bctneibtabs$cosmic=0
+bctneibtabs$cosmic[is.element(bctneibtabs$gene,cosmicdrivers$GENE_SYMBOL)]=1
+
+bctneibtabs$intogen=0
+bctneibtabs$intogen[is.element(bctneibtabs$gene,intogenunidrivers)]=1
+
+bctneibtabs$oncokb=0
+bctneibtabs$oncokb[is.element(bctneibtabs$gene,oncokb$Hugo.Symbol)]=1
+
+
 wctneibtabs$driver=0
 wctneibtabs$driver[is.element(wctneibtabs$gene,unidrivers)]=1
 
@@ -291,6 +314,16 @@ wctneibtabs$oncogene[is.element(wctneibtabs$gene,oncogenes)]=1
 
 wctneibtabs$tsgene=0
 wctneibtabs$tsgene[is.element(wctneibtabs$gene,tsgenes)]=1
+
+wctneibtabs$cosmic=0
+wctneibtabs$cosmic[is.element(wctneibtabs$gene,cosmicdrivers$GENE_SYMBOL)]=1
+
+wctneibtabs$intogen=0
+wctneibtabs$intogen[is.element(wctneibtabs$gene,intogenunidrivers)]=1
+
+wctneibtabs$oncokb=0
+wctneibtabs$oncokb[is.element(wctneibtabs$gene,oncokb$Hugo.Symbol)]=1
+
 
 bctPcand=bctneibtabs[bctneibtabs$enriched==1 & bctneibtabs$DAsign=="positive" & bctneibtabs$SAsign=="positive" & bctneibtabs$posstrict>1,]
 bctNcand=bctneibtabs[bctneibtabs$enriched==1 & bctneibtabs$DAsign=="negative" & bctneibtabs$SAsign=="negative" & bctneibtabs$negstrict>1,]
@@ -305,3 +338,44 @@ write.csv(bctneibtabs,file="./data/processed/bctneibtabs.csv",row.names=F)
 
 write.csv(wctdrivertab,file="./data/processed/wctdrivertab.csv",row.names=F)
 write.csv(bctdrivertab,file="./data/processed/bctdrivertab.csv",row.names=F)
+
+#disgenet analysis
+
+library(disgenet2r)
+api_key <- "6581e9d7-1bd2-4f8c-bfbd-3022f71e620b"
+Sys.setenv(DISGENET_API_KEY= api_key)
+
+bctPcand$disgenetcausal=0
+for (i in 1:nrow(bctPcand)){
+  res=gene2evidence(bctPcand$gene[i])
+  if (!is.null(res)){
+    res_tab=res@qresult
+    res_tab=res_tab[res_tab$diseaseClasses_UMLS_ST=="Neoplastic Process (T191)",]
+    causallines=which(is.element(res_tab$associationType, c("CausalMutation","SomaticCausalMutation","GermlineCausalMutation")))
+    if (length(causallines)>0){
+      bctPcand$disgenetcausal[i]=1
+    }
+  }
+  
+}
+
+
+bctNcand$disgenetcausal=0
+for (i in 1:nrow(bctNcand)){
+  res=gene2evidence(bctNcand$gene[i])
+  if (!is.null(res)){
+    res_tab=res@qresult
+    res_tab=res_tab[res_tab$diseaseClasses_UMLS_ST=="Neoplastic Process (T191)",]
+    causallines=which(is.element(res_tab$associationType, c("CausalMutation","SomaticCausalMutation","GermlineCausalMutation")))
+    if (length(causallines)>0){
+      bctNcand$disgenetcausal[i]=1
+    }
+  }
+  
+}
+
+bctPcand$driver_all=1*(bctPcand$driver==1 | bctPcand$cosmic==1 | bctPcand$intogen==1 | bctPcand$oncokb==1 | bctPcand$disgenetcausal==1)
+
+bctNcand$driver_all=1*(bctNcand$driver==1 | bctNcand$cosmic==1 | bctNcand$intogen==1 | bctNcand$oncokb==1 | bctNcand$disgenetcausal==1)
+
+

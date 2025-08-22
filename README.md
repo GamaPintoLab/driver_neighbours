@@ -24,8 +24,9 @@ R packages needed:
 3. ggplot2
 4. ggpubr
 5. arrow
-6. tictioc
-7. Coselens<br>
+6. tictoc
+7. Coselens
+8. disgenet2r<br>
 
 
 To reproduce the figures in the manuscript:<br>
