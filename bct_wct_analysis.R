@@ -342,7 +342,7 @@ write.csv(bctdrivertab,file="./data/processed/bctdrivertab.csv",row.names=F)
 #disgenet analysis
 
 library(disgenet2r)
-api_key <- "6581e9d7-1bd2-4f8c-bfbd-3022f71e620b"
+api_key <- "xxxx" # insert your own api_key here. You need to create an account on disgenet.com (free for academic users) 
 Sys.setenv(DISGENET_API_KEY= api_key)
 
 bctPcand$disgenetcausal=0
